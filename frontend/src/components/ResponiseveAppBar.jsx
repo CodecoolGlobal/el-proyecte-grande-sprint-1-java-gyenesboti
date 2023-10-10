@@ -12,7 +12,9 @@ import AdbIcon from '@mui/icons-material/Adb'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-const pages = [['Home', '/'], ['Products', '/products'], ['Add product', '/addProduct'], ['Log In', '/login'], ['Sign up', '/signup']]
+const pages = [['Home', '/'], ['Products', '/products'], ['Add product', '/addProduct']] 
+const loggedIn = ['Log out', '/products'];
+const notLoggedIn = [['Log In', '/login'], ['Sign up', '/signup']];
 
 function ResponsiveAppBar () {
   const [anchorElNav, setAnchorElNav] = useState(null)
@@ -23,6 +25,11 @@ function ResponsiveAppBar () {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null)
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("token")
+    sessionStorage.removeItem("user")
   }
 
   return (<AppBar position="fixed">
@@ -81,6 +88,20 @@ function ResponsiveAppBar () {
               </Link>
 
             ))}
+            {sessionStorage.getItem("token") ? 
+            (<Link key={loggedIn[0]} to={loggedIn[1]}>
+                <MenuItem onClick={handleLogout}>
+                  <Typography textAlign="center">{loggedIn[0]}</Typography>
+                </MenuItem>
+              </Link>
+            ) : 
+            notLoggedIn.map((page) => (<Link key={page[0]} to={page[1]}>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">{page[0]}</Typography>
+              </MenuItem>
+            </Link>
+            ))
+            }
           </Menu>
         </Box>
         <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}/>
